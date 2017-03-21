@@ -8,7 +8,7 @@ package org.foi.nwtis.fvukovic.zadaca_1;
 import java.util.List;
 
 /**
- *
+ *aa
  * @author filip
  */
 public class EntitetAdrese {
