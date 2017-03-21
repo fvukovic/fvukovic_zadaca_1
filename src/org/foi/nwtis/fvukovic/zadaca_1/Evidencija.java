@@ -13,11 +13,11 @@ import java.util.ArrayList;
  * @author grupa_3
  */
 public class Evidencija implements Serializable{
-    int ukupnoZahtjeva = 0;
-    int brojUspjesnihZahtjeva = 0;
-    int brojPrekinutihZahtjeva = 0;
-    ArrayList zahtjeviZaAdrese = new ArrayList();
-    String zadnjaAdresa = "";
+    static int ukupnoZahtjeva = 0;
+    static int brojUspjesnihZahtjeva = 0;
+    static int brojPrekinutihZahtjeva = 0;
+    static ArrayList zahtjeviZaAdrese = new ArrayList();
+    static String zadnjaAdresa = "";
     
     
     //TODO dovršiti za ostale podakte 

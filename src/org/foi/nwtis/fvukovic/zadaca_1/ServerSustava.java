@@ -38,6 +38,9 @@ public class ServerSustava {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             sb.append(args[i]).append(" ");
+            System.out.println("argumenti :"+args[i]);
+            if(args[i].equals("-load")){
+        }
         }
         String p = sb.toString().trim();
         Pattern pattern = Pattern.compile(sintaksa);

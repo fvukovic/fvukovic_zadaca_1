@@ -31,11 +31,14 @@ public class KorisnikSustava {
     public static void main(String[] args) {
         //-admin -server [ipadresa | adresa] -port port -u korisnik -p lozinka [-pause | -start | -stop | -stat ]
         //TODO dovrši ostale paremetre
-                          //-admin -server localhost -port 8000
+        //-admin -server localhost -port 8000
         String sintaksa = "^-admin -server ([^\\s]+) -port ([\\d]{4})$";
-
+        String sintaksaAdmin = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 1";
+        String sintaksaPogled = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
+        String sintaksaKorisnik = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
+            System.out.println("argumenti :" + args[i]);
             sb.append(args[i]).append(" ");
         }
         String p = sb.toString().trim();
@@ -47,16 +50,62 @@ public class KorisnikSustava {
             int kraj = m.groupCount();
             for (int i = poc; i <= kraj; i++) {
                 System.out.println(i + ". " + m.group(i));
+
             }
-            
+
             String nazivServera = m.group(1);
             int port = Integer.parseInt(m.group(2));
-            
+            System.out.println("ne valja");
             KorisnikSustava korisnikSustava = new KorisnikSustava();
-            korisnikSustava.pokreniKorisnika(nazivServera,port);
-            
+            korisnikSustava.pokreniKorisnika(nazivServera, port);
+
         } else {
-            System.out.println("Ne odgovara regex!");
+            p = sb.toString().trim();
+            pattern = Pattern.compile(sintaksaAdmin);
+            m = pattern.matcher(p);
+            status = m.matches();
+            if (status) {
+                int poc = 0;
+                int kraj = m.groupCount();
+                for (int i = poc; i <= kraj; i++) {
+                    System.out.println(i + ". " + m.group(i));
+
+                }
+
+                String nazivServera = m.group(1);
+                int port = Integer.parseInt(m.group(2));
+                String nazivFunkcije = "-start";
+                System.out.println("valja");
+                AdministratorSustava administratorSustava = new AdministratorSustava();
+                administratorSustava.pokreniAdministratora(nazivServera, port, nazivFunkcije);
+
+            } else {
+
+                p = sb.toString().trim();
+                pattern = Pattern.compile(sintaksaKorisnik);
+                m = pattern.matcher(p);
+                status = m.matches();
+                System.out.println("OVO JE STATUS" + status);
+                if (status) {
+                    int poc = 0;
+                    int kraj = m.groupCount();
+                    for (int i = poc; i <= kraj; i++) {
+                        System.out.println(i + ". " + m.group(i));
+
+                    }
+
+                    String nazivServera = m.group(1);
+                    int port = Integer.parseInt(m.group(2));
+                    String nazivFunkcije = "-a";
+                    String zadnjiParametar = "400";
+                    System.out.println("valja");
+                    KlijentSustava klijentSustava = new KlijentSustava();
+                    klijentSustava.pokreniKlijenta(nazivServera, port, nazivFunkcije,zadnjiParametar);
+
+                } else {
+                    System.out.println("Ne odgovara regex!");
+                }
+            }
         }
     }
 
@@ -64,7 +113,7 @@ public class KorisnikSustava {
         InputStream is = null;
         OutputStream os = null;
         Socket s = null;
-        
+
         try {
             s = new Socket(nazivServera, port);
             is = s.getInputStream();
@@ -74,7 +123,7 @@ public class KorisnikSustava {
             os.write(zahtjev.getBytes());
             os.flush();
             s.shutdownOutput();
-            
+
             StringBuffer sb = new StringBuffer();
             while (true) {
                 int znak = is.read();
@@ -100,7 +149,5 @@ public class KorisnikSustava {
             }
         }
     }
-
-
 
 }

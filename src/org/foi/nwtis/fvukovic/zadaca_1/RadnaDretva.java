@@ -35,6 +35,7 @@ public class RadnaDretva extends Thread {
 
     @Override
     public void interrupt() {
+        Evidencija.brojPrekinutihZahtjeva++;
         super.interrupt(); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -55,6 +56,8 @@ public class RadnaDretva extends Thread {
         InputStream is = null;
         OutputStream os = null;
         this.vrijemeIzvršavanja = System.currentTimeMillis();
+        SerijalizatorEvidencije novi = new SerijalizatorEvidencije(konfig);
+        novi.start();
         try {
 
             is = s.getInputStream();
@@ -74,7 +77,9 @@ public class RadnaDretva extends Thread {
             Pattern p = Pattern.compile(sintaksa_admin);
             Matcher m = p.matcher(sb);
             boolean status = m.matches();
+              System.out.println("ADMIN pause : "+  status);
             if (status) {
+                System.out.println("admin");
                 p = Pattern.compile(sintaksa_adminPause);
                 m = p.matcher(sb);
                 status = m.matches();
@@ -85,7 +90,7 @@ public class RadnaDretva extends Thread {
                 m = p.matcher(sb);
                 status = m.matches();
                 if(status){
-                
+                    System.out.println("ADMIN START");
                 }
                  p = Pattern.compile(sintaksa_adminStop);
                 m = p.matcher(sb);
@@ -123,7 +128,7 @@ public class RadnaDretva extends Thread {
                             if (status) {
                                 //TODO dovršiti za korisnika 2. slučaj
                             } else {
-                                //kriva vrsta korisnika
+                                System.out.println("Krivi regex kralju");
                             }
                         }
 
@@ -177,6 +182,8 @@ public class RadnaDretva extends Thread {
         }
         return true;
     }
+    
+    
 
     public String userAdresaTest(String adresa) {
         for (EntitetAdrese entitetAdrese : ServerSustava.sveAdrese) {
@@ -192,9 +199,11 @@ public class RadnaDretva extends Thread {
     public boolean userWait(long nnnn) {
         return true;
     }
+    
 
     @Override
     public synchronized void start() {
+        Evidencija.ukupnoZahtjeva++;
         super.start(); //To change body of generated methods, choose Tools | Templates.
     }
 
