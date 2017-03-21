@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.foi.nwtis.matnovak.zadaca_1;
+package org.foi.nwtis.fvukovic.zadaca_1;
 
 import java.util.List;
 import java.util.logging.Level;
