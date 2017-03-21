@@ -29,6 +29,7 @@ public class ServerSustava {
      * @param args the command line arguments
      */ 
     public static List <EntitetAdrese> sveAdrese= new ArrayList<EntitetAdrese>();
+    public static List<RadnaDretva> listaRadnihDretva = new ArrayList<RadnaDretva>();
     public static void main(String[] args) {
         //-konf datoteka(.txt | .xml) [-load]
 
@@ -80,7 +81,7 @@ public class ServerSustava {
             se.start();
 
             ServerSocket serverSocket = new ServerSocket(port);
-            List<RadnaDretva> listaRadnihDretva = new ArrayList<RadnaDretva>(brojMaximalnihRadnihDretva);
+            
             
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -96,8 +97,7 @@ public class ServerSustava {
                     System.err.println(rd.getName());
                     System.err.println(listaRadnihDretva.size());
                     listaRadnihDretva.add(rd);
-                    rd.start();
-                    nd.listaSvihRadnihDretva = listaRadnihDretva;
+                    rd.start(); 
                     rd.listaSvihRadnihDretva= listaRadnihDretva;
                 } else {
                     rezervnaDretva.socket = socket;

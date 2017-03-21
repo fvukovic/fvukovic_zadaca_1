@@ -3,9 +3,9 @@
 <properties>
 <comment>NWTiS dkermek</comment>
 <entry key="port">8000</entry>
-<entry key="intervalNadzorneDretve">100</entry>
+<entry key="intervalNadzorneDretve">1000</entry>
 <entry key="maksVrijemeRadneDretve">3000</entry>
-<entry key="intervalAdresneDretve">200</entry>
+<entry key="intervalAdresneDretve">2000</entry>
 <entry key="maksAdresa">10</entry>
 <entry key="maksBrojRadnihDretvi">7</entry>
 <entry key="brojZahtjevaZaSerijalizaciju">100</entry>

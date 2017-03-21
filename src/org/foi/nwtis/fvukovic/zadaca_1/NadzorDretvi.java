@@ -16,8 +16,7 @@ import org.foi.nwtis.matnovak.konfiguracije.Konfiguracija;
  */
 public class NadzorDretvi extends Thread{
 
-    Konfiguracija konf;
-    List <RadnaDretva> listaSvihRadnihDretva;
+    Konfiguracija konf; 
     
     public NadzorDretvi(Konfiguracija konf) {
         this.konf = konf;
@@ -35,18 +34,25 @@ public class NadzorDretvi extends Thread{
         while (true) {    
             System.out.println(this.getClass());
             long trenutnoVrijeme = System.currentTimeMillis();
-            if(listaSvihRadnihDretva!=null){
-                
-            for(RadnaDretva radnaDretva : listaSvihRadnihDretva){ 
+            if(ServerSustava.listaRadnihDretva!=null){
+                System.out.println("DRETVE: "+ServerSustava.listaRadnihDretva.size());
+            for(RadnaDretva radnaDretva : ServerSustava.listaRadnihDretva){ 
                 long vrijemeZavrsetka = System.currentTimeMillis();
+                int brojac=0;
                 long vrijemeIzvodenjaDretve = (vrijemeZavrsetka - radnaDretva.vrijemeIzvršavanja);
                 System.out.println(vrijemeIzvodenjaDretve>trajanjeSpavanjaRadneDretve);
                 if(vrijemeIzvodenjaDretve>trajanjeSpavanjaRadneDretve){
                     radnaDretva.interrupt();
-                    System.out.println("Iskljucena je radna dretva pod imenom" + radnaDretva.getName());
+                    ServerSustava.listaRadnihDretva.remove(0);
+                    System.out.println("Iskljucena je radna dretva pod imenom: " + radnaDretva.getName());
+                    System.out.println("Broj Radnih Dretva: "+ServerSustava.listaRadnihDretva.size());
+                    if(ServerSustava.listaRadnihDretva.size()==0){
+                        break;
+                    }
                 }else{
                     System.err.println("Vrijeme trajanja je dobro ");
                 }
+                brojac++;
                 }
             }
             long vrijemeZavrsetka = System.currentTimeMillis();
