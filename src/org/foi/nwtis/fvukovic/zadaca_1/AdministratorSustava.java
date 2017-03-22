@@ -26,7 +26,7 @@ public class AdministratorSustava {
             s = new Socket(nazivServera, port);
             is = s.getInputStream();
             os = s.getOutputStream();
-             String zahtjev = "USER pero; PASSWD 123456; PAUSE; ";
+             String zahtjev = "USER pero; PASSWD 123456; "+nazivFunkcije.toUpperCase().substring(1)+";";
             System.out.println(zahtjev);
             os.write(zahtjev.getBytes());
             os.flush();

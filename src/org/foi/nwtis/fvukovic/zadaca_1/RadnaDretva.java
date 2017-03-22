@@ -5,10 +5,14 @@
  */
 package org.foi.nwtis.fvukovic.zadaca_1;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +30,8 @@ public class RadnaDretva extends Thread {
     public long vrijemeIzvršavanja;
     public List<RadnaDretva> listaSvihRadnihDretva;
     Konfiguracija konfig;
+     InputStream is = null;
+     OutputStream os = null;
     //TODO varijabla za vrijeme početka rada dretve
 
     RadnaDretva(Socket socket, Konfiguracija konfig) {
@@ -53,8 +59,7 @@ public class RadnaDretva extends Thread {
         String sintaksa_korisnik_2 = "USER ([^\\s]+); TEST ([^\\s]+);";
         String sintaksa_korisnik_3 = "USER ([^\\s]+); WAIT ([^\\s]+);";
 
-        InputStream is = null;
-        OutputStream os = null;
+       
         this.vrijemeIzvršavanja = System.currentTimeMillis();
         SerijalizatorEvidencije novi = new SerijalizatorEvidencije(konfig);
         novi.start();
@@ -77,32 +82,51 @@ public class RadnaDretva extends Thread {
             Pattern p = Pattern.compile(sintaksa_admin);
             Matcher m = p.matcher(sb);
             boolean status = m.matches();
-              System.out.println("ADMIN pause : "+  status);
+            System.out.println("ADMIN pause : " + status);
             if (status) {
+                String line;
+                try (
+                        InputStream fis = new FileInputStream(konfig.dajPostavku("adminDatoteka"));
+                        InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+                        BufferedReader br = new BufferedReader(isr);) {
+                    while ((line = br.readLine()) != null) {
+                        System.out.println(line);
+                        String[] parts = line.split(";");
+                        String part1 = parts[0]; // 004
+                        String part2 = parts[1]; // 034556
+                        if (part1.equals(KorisnikSustava.username) && (part2.equals(KorisnikSustava.password))) {
+                            System.out.println("DOSAO SAM OVDJE");
+                            os.write("OK".getBytes());
+                            os.flush();
+                        } else {
+
+                        }
+                    }
+                }
                 System.out.println("admin");
                 p = Pattern.compile(sintaksa_adminPause);
                 m = p.matcher(sb);
                 status = m.matches();
-                if(status){
-                
+                if (status) {
+
                 }
-                 p = Pattern.compile(sintaksa_adminStart);
+                p = Pattern.compile(sintaksa_adminStart);
                 m = p.matcher(sb);
                 status = m.matches();
-                if(status){
+                if (status) {
                     System.out.println("ADMIN START");
                 }
-                 p = Pattern.compile(sintaksa_adminStop);
+                p = Pattern.compile(sintaksa_adminStop);
                 m = p.matcher(sb);
                 status = m.matches();
-                if(status){
-                
+                if (status) {
+                    adminStop();
                 }
-                 p = Pattern.compile(sintaksa_adminStat);
+                p = Pattern.compile(sintaksa_adminStat);
                 m = p.matcher(sb);
                 status = m.matches();
-                if(status){
-                
+                if (status) {
+
                 }
                 //TODO dobršiti za admina
             } else {
@@ -110,7 +134,9 @@ public class RadnaDretva extends Thread {
                 m = p.matcher(sb);
                 status = m.matches();
                 if (status) {
-                    //TODO dovršiti za korisnika 1. slučaj
+                    System.err.println("user:" + m.group(2) + " " + ServerSustava.sveAdrese.size() + "dosaooo saaaam");
+                    userAdresaAdd(m.group(2));
+
                 } else {
                     p = Pattern.compile(sintaksa_korisnik_2);
                     m = p.matcher(sb);
@@ -136,7 +162,7 @@ public class RadnaDretva extends Thread {
                 }
             }
 
-            os.write("OKg;".getBytes());
+            os.write("OK;".getBytes());
             os.flush();
         } catch (IOException ex) {
             Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,25 +191,59 @@ public class RadnaDretva extends Thread {
         for (RadnaDretva radnaDretva : this.listaSvihRadnihDretva) {
             radnaDretva.interrupt();
         }
-        System.exit(MIN_PRIORITY);
+        try {
+            s.close();
+        } catch (IOException ex) {
+            Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ServerSustava.ugasiAplikaciju();
     }
 
     public boolean userAdresaAdd(String adresa) {
+        
+         if(ServerSustava.sveAdrese.size()==7){
+         try {
+            is = s.getInputStream();
+            os = s.getOutputStream();
+            os.write("ERROR 10;Nema slobodnog mjesta".getBytes());
+                            os.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         }   
+        if (ServerSustava.sveAdrese.size() == 0) {
+            EntitetAdrese novi = new EntitetAdrese(adresa);
+            ServerSustava.sveAdrese.add(novi);
+            try {
+            is = s.getInputStream();
+            os = s.getOutputStream();
+            os.write("OK".getBytes());
+                            os.flush();
+                            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
+        }
         for (EntitetAdrese entitetAdrese : ServerSustava.sveAdrese) {
+
+            System.out.println("istina:" + entitetAdrese.adresa.equals(adresa));
             if (entitetAdrese.adresa.equals(adresa)) {
+                try {
+            is = s.getInputStream();
+            os = s.getOutputStream();
+            os.write("ERROR11; Adresa vec postoji".getBytes());
+                            os.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 return false;
             } else {
-                if (ServerSustava.sveAdrese.size() < Integer.parseInt(konfig.dajPostavku("maksAdresa"))) {
-                    EntitetAdrese novi = new EntitetAdrese(adresa);
-                    ServerSustava.sveAdrese.add(novi);
-                    return true;
-                }
+                 
             }
         }
         return true;
     }
-    
-    
 
     public String userAdresaTest(String adresa) {
         for (EntitetAdrese entitetAdrese : ServerSustava.sveAdrese) {
@@ -199,7 +259,6 @@ public class RadnaDretva extends Thread {
     public boolean userWait(long nnnn) {
         return true;
     }
-    
 
     @Override
     public synchronized void start() {

@@ -24,7 +24,8 @@ import org.foi.nwtis.matnovak.konfiguracije.NemaKonfiguracije;
  * @author grupa_3
  */
 public class KorisnikSustava {
-
+    public static String username="peroooo";
+    public static String password="12345ooo6";
     /**
      * @param args the command line arguments
      */
@@ -37,6 +38,7 @@ public class KorisnikSustava {
         String sintaksaPogled = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
         String sintaksaKorisnik = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
         StringBuilder sb = new StringBuilder();
+         
         for (int i = 0; i < args.length; i++) {
             System.out.println("argumenti :" + args[i]);
             sb.append(args[i]).append(" ");
@@ -74,7 +76,7 @@ public class KorisnikSustava {
 
                 String nazivServera = m.group(1);
                 int port = Integer.parseInt(m.group(2));
-                String nazivFunkcije = "-start";
+                String nazivFunkcije = "-stop";
                 System.out.println("valja");
                 AdministratorSustava administratorSustava = new AdministratorSustava();
                 administratorSustava.pokreniAdministratora(nazivServera, port, nazivFunkcije);
@@ -97,8 +99,7 @@ public class KorisnikSustava {
                     String nazivServera = m.group(1);
                     int port = Integer.parseInt(m.group(2));
                     String nazivFunkcije = "-a";
-                    String zadnjiParametar = "400";
-                    System.out.println("valja");
+                    String zadnjiParametar = "https://www.facebook.com/"; 
                     KlijentSustava klijentSustava = new KlijentSustava();
                     klijentSustava.pokreniKlijenta(nazivServera, port, nazivFunkcije,zadnjiParametar);
 
@@ -119,7 +120,7 @@ public class KorisnikSustava {
             is = s.getInputStream();
             os = s.getOutputStream();
 
-            String zahtjev = "USER pero; PASSWD 123456; PAUSE; ";
+            String zahtjev = "USER pero; PASSWD 123456; PAUSE;";
             os.write(zahtjev.getBytes());
             os.flush();
             s.shutdownOutput();

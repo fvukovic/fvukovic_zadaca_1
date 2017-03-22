@@ -11,5 +11,5 @@
 <entry key="brojZahtjevaZaSerijalizaciju">100</entry>
 <entry key="intervalSerijalizacije">60</entry>
 <entry key="evidDatoteka">DZ_1_evidencija.bin</entry>
-<entry key="adminDatoteka">DZ_1_administratori.txt</entry>
+<entry key="adminDatoteka">DZ1_administratori.txt</entry>
 </properties>

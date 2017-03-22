@@ -5,7 +5,11 @@
  */
 package org.foi.nwtis.fvukovic.zadaca_1;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -27,9 +31,10 @@ public class ServerSustava {
 
     /**
      * @param args the command line arguments
-     */ 
-    public static List <EntitetAdrese> sveAdrese= new ArrayList<EntitetAdrese>();
+     */
+    public static List<EntitetAdrese> sveAdrese = new ArrayList<EntitetAdrese>();
     public static List<RadnaDretva> listaRadnihDretva = new ArrayList<RadnaDretva>();
+
     public static void main(String[] args) {
         //-konf datoteka(.txt | .xml) [-load]
 
@@ -38,9 +43,8 @@ public class ServerSustava {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             sb.append(args[i]).append(" ");
-            System.out.println("argumenti :"+args[i]);
-            if(args[i].equals("-load")){
-        }
+            System.out.println("argumenti :" + args[i]);
+
         }
         String p = sb.toString().trim();
         Pattern pattern = Pattern.compile(sintaksa);
@@ -67,13 +71,22 @@ public class ServerSustava {
         }
     }
 
+    public static void ugasiAplikaciju() {
+        System.exit(0);
+    }
+
+    public static void serverStop() {
+
+    }
+
     private void pokreniServer(String nazivDatoteke, boolean trebaUcitatiEvidenciju) {
         //TODO kreirati kolekciju u kojoj će se spremati aktivne dretve
         try {
             Konfiguracija konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
             Short redniBrojDretve = 1;
             int port = Integer.parseInt(konfig.dajPostavku("port"));
-            int brojMaximalnihRadnihDretva=Integer.parseInt(konfig.dajPostavku("maksBrojRadnihDretvi"));
+            int brojMaximalnihRadnihDretva = Integer.parseInt(konfig.dajPostavku("maksBrojRadnihDretvi"));
+
             NadzorDretvi nd = new NadzorDretvi(konfig);
             nd.start();
             RezervnaDretva rezervnaDretva = new RezervnaDretva(konfig);
@@ -84,24 +97,35 @@ public class ServerSustava {
             se.start();
 
             ServerSocket serverSocket = new ServerSocket(port);
-            
-            
+
             while (true) {
                 Socket socket = serverSocket.accept();
-                //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi
-                    
+
+                if (trebaUcitatiEvidenciju == true) {
+                    File f = new File(konfig.dajPostavku("evidDatoteka"));
+                    FileInputStream fis = new FileInputStream(f);
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    try {
+                        Evidencija save = (Evidencija) ois.readObject();
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+                    }                   
+                }else{
+                    System.out.println("Ne postoji datoteka sa serijaliziranim podacima");
+                }
+
                 int parsiranRedniBroj = Integer.parseInt(redniBrojDretve.toString());
 
-                if (listaRadnihDretva.size() < brojMaximalnihRadnihDretva) { 
-                    RadnaDretva rd = new RadnaDretva(socket,konfig);
+                if (listaRadnihDretva.size() < brojMaximalnihRadnihDretva) {
+                    RadnaDretva rd = new RadnaDretva(socket, konfig);
                     rd.setName("fvukovic - " + parsiranRedniBroj);
                     parsiranRedniBroj++;
                     redniBrojDretve = (short) parsiranRedniBroj;
-                    System.err.println(rd.getName());
-                    System.err.println(listaRadnihDretva.size());
+                    System.out.println(rd.getName());
+                    System.out.println(listaRadnihDretva.size());
                     listaRadnihDretva.add(rd);
-                    rd.start(); 
-                    rd.listaSvihRadnihDretva= listaRadnihDretva;
+                    rd.start();
+                    rd.listaSvihRadnihDretva = listaRadnihDretva;
                 } else {
                     rezervnaDretva.socket = socket;
                 }
