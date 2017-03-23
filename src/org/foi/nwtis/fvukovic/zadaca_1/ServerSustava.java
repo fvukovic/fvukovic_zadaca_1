@@ -10,8 +10,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,8 +34,10 @@ public class ServerSustava {
     /**
      * @param args the command line arguments
      */
-    public static List<EntitetAdrese> sveAdrese = new ArrayList<EntitetAdrese>();
+   
     public static List<RadnaDretva> listaRadnihDretva = new ArrayList<RadnaDretva>();
+    public static boolean serverPauziran=false; 
+    
 
     public static void main(String[] args) {
         //-konf datoteka(.txt | .xml) [-load]
@@ -46,6 +50,7 @@ public class ServerSustava {
             System.out.println("argumenti :" + args[i]);
 
         }
+      
         String p = sb.toString().trim();
         Pattern pattern = Pattern.compile(sintaksa);
         Matcher m = pattern.matcher(p);
@@ -99,6 +104,9 @@ public class ServerSustava {
             ServerSocket serverSocket = new ServerSocket(port);
 
             while (true) {
+                 
+           
+                    
                 Socket socket = serverSocket.accept();
 
                 if (trebaUcitatiEvidenciju == true) {
@@ -131,11 +139,12 @@ public class ServerSustava {
                 }
 
                 //TODO treba provjeriti ima li "mjesta" za novu radnu dretvu
-            }
+             
+        }
 
         } catch (NemaKonfiguracije | NeispravnaKonfiguracija | IOException ex) {
             Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
 }

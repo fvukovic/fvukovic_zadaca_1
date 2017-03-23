@@ -8,14 +8,13 @@ package org.foi.nwtis.fvukovic.zadaca_1;
 import java.util.List;
 
 /**
- *aa
+ *
  * @author filip
  */
 public class EntitetAdrese {
     String adresa;
     int brojZahtjeva;
-    String status;
-    List <EntitetAdrese> sveAdrese;
+    boolean status;
 
     public EntitetAdrese(String adresa) {
         this.adresa = adresa; 

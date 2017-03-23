@@ -7,6 +7,7 @@ package org.foi.nwtis.fvukovic.zadaca_1;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,11 +17,12 @@ public class Evidencija implements Serializable{
     static int ukupnoZahtjeva = 0;
     static int brojUspjesnihZahtjeva = 0;
     static int brojPrekinutihZahtjeva = 0;
-    static ArrayList zahtjeviZaAdrese = new ArrayList();
-    static String zadnjaAdresa = "";
+    static long ukupnoTrajanjeRadnihDretva=0;
+    public static List<EntitetAdrese> sveAdrese = new ArrayList<EntitetAdrese>();
+    static EntitetAdrese zadnjaAdresa; 
     
     
     //TODO dovršiti za ostale podakte 
     
-    
+  
 }

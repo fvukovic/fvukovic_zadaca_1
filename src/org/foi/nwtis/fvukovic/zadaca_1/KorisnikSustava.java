@@ -24,8 +24,10 @@ import org.foi.nwtis.matnovak.konfiguracije.NemaKonfiguracije;
  * @author grupa_3
  */
 public class KorisnikSustava {
-    public static String username="peroooo";
-    public static String password="12345ooo6";
+
+    public static String username = "peroooo";
+    public static String password = "12345ooo6";
+
     /**
      * @param args the command line arguments
      */
@@ -38,11 +40,14 @@ public class KorisnikSustava {
         String sintaksaPogled = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
         String sintaksaKorisnik = "^-admin -server ([^\\s]+) -port ([\\d]{4}) 2";
         StringBuilder sb = new StringBuilder();
-         
+
         for (int i = 0; i < args.length; i++) {
             System.out.println("argumenti :" + args[i]);
             sb.append(args[i]).append(" ");
         }
+        PregledSustava novi = new PregledSustava();
+        novi.prikazi();
+        
         String p = sb.toString().trim();
         Pattern pattern = Pattern.compile(sintaksa);
         Matcher m = pattern.matcher(p);
@@ -76,7 +81,7 @@ public class KorisnikSustava {
 
                 String nazivServera = m.group(1);
                 int port = Integer.parseInt(m.group(2));
-                String nazivFunkcije = "-stop";
+                String nazivFunkcije = "-start";
                 System.out.println("valja");
                 AdministratorSustava administratorSustava = new AdministratorSustava();
                 administratorSustava.pokreniAdministratora(nazivServera, port, nazivFunkcije);
@@ -99,9 +104,9 @@ public class KorisnikSustava {
                     String nazivServera = m.group(1);
                     int port = Integer.parseInt(m.group(2));
                     String nazivFunkcije = "-a";
-                    String zadnjiParametar = "https://www.facebook.com/"; 
+                    String zadnjiParametar = "001";
                     KlijentSustava klijentSustava = new KlijentSustava();
-                    klijentSustava.pokreniKlijenta(nazivServera, port, nazivFunkcije,zadnjiParametar);
+                    klijentSustava.pokreniKlijenta(nazivServera, port, nazivFunkcije, zadnjiParametar);
 
                 } else {
                     System.out.println("Ne odgovara regex!");

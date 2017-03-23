@@ -40,6 +40,7 @@ public class NadzorDretvi extends Thread{
                 long vrijemeZavrsetka = System.currentTimeMillis();
                 int brojac=0;
                 long vrijemeIzvodenjaDretve = (vrijemeZavrsetka - radnaDretva.vrijemeIzvršavanja);
+                 
                 System.out.println(vrijemeIzvodenjaDretve>trajanjeSpavanjaRadneDretve);
                 if(vrijemeIzvodenjaDretve>trajanjeSpavanjaRadneDretve){
                     radnaDretva.interrupt();
